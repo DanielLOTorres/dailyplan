@@ -6,27 +6,31 @@ import './App.css'
 import Task from './components/Task'
 import Form from './components/Form'
 import Search from './components/Search'
+import Filter from './components/Filter'
+import Category from './components/Category'
 
 function App() {
 
   const [search, setSearch] = useState("")
+  const [filter, setFilter] = useState("Todas")
+  const [category, setCategory] = useState("Todas")
   const [todos, setTodos] = useState([
     {
       id: 1,
       text: "Criar tal sistema",
-      category: "Dev",
+      category: "Projetos",
       done: false
     },
     {
       id: 2,
       text: "Jogar lixo fora",
-      category: "Home",
+      category: "Casa",
       done: false
     },
     {
       id: 3,
       text: "Candidatar vaga X",
-      category: "Job",
+      category: "Trabalho",
       done: false
     },
   ])
@@ -58,10 +62,24 @@ function App() {
     <div className='app'>
       <h1>Tarefas</h1>
       <Search search={search} setSearch={setSearch}/>
+      <Filter filter={filter} setFilter={setFilter}/>
+      <Category/>
       <div className='todo-list'>
-        {todos.filter((task) => task.text.toLowerCase().includes(search.toLowerCase())).map((task) => (
-          <Task key={task.id} task={task} removeTask={removeTask} completeTask={completeTask}/>
-        ))}
+        {todos
+        .filter((task) =>{ 
+          switch (filter){
+            case "Todas": return true
+            case "Prontas": return task.done
+            case "Pendentes": return !task.done
+            case "Trabalho": return  task.category === "Trabalho" 
+            case "Casa": return  task.category === "Casa"
+            case "Mozin": return  task.category === "Mozin"
+            case "Projetos": return  task.category === "Projetos"
+            case "Faculdade": return  task.category === "Faculdade"
+        }})
+        .filter((task) => task.text.toLowerCase().includes(search.toLowerCase()))
+        .map((task) => (
+          <Task key={task.id} task={task} removeTask={removeTask} completeTask={completeTask}/>))}
       </div>
       <Form addTask={addTask}/>
     </div>
