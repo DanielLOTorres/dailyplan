@@ -61,25 +61,37 @@ function App() {
   return (
     <div className='app'>
       <h1>Tarefas</h1>
-      <Search search={search} setSearch={setSearch}/>
-      <Filter filter={filter} setFilter={setFilter}/>
-      <Category/>
       <div className='todo-list'>
         {todos
+        //status
         .filter((task) =>{ 
           switch (filter){
             case "Todas": return true
             case "Prontas": return task.done
             case "Pendentes": return !task.done
+
+        }})
+        //category
+        .filter((task) => {
+          switch (category){
+            case "Todas": return true
             case "Trabalho": return  task.category === "Trabalho" 
             case "Casa": return  task.category === "Casa"
             case "Mozin": return  task.category === "Mozin"
             case "Projetos": return  task.category === "Projetos"
             case "Faculdade": return  task.category === "Faculdade"
-        }})
+          }
+        })
+        //search
         .filter((task) => task.text.toLowerCase().includes(search.toLowerCase()))
+        //load
         .map((task) => (
           <Task key={task.id} task={task} removeTask={removeTask} completeTask={completeTask}/>))}
+      </div>
+      <Search search={search} setSearch={setSearch}/>
+      <div className='filters'>
+        <Filter filter={filter} setFilter={setFilter}/>
+        <Category category={category} setCategory={setCategory}/>
       </div>
       <Form addTask={addTask}/>
     </div>
