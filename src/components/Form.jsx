@@ -3,7 +3,7 @@ import { useState } from "react"
 
 const Form = ({addTask}) => {
   const [title, setTitle] = useState("")
-  const [category, setCategory] = useState("")
+  const [category, setCategory] = useState("Trabalho")
 
   const handleSubmit = (e) =>{
     e.preventDefault()

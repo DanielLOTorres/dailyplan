@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-key */
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 import Task from './components/Task'
@@ -14,41 +14,34 @@ function App() {
   const [search, setSearch] = useState("")
   const [filter, setFilter] = useState("Todas")
   const [category, setCategory] = useState("Todas")
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      text: "Criar tal sistema",
-      category: "Projetos",
-      done: false
-    },
-    {
-      id: 2,
-      text: "Jogar lixo fora",
-      category: "Casa",
-      done: false
-    },
-    {
-      id: 3,
-      text: "Candidatar vaga X",
-      category: "Trabalho",
-      done: false
-    },
-  ])
+  const [todos, setTodos] = useState([ ])
 
-  const addTask = (text, category)=>{
-     const newTodos = [...todos, {
-      id: (todos[todos.length -1].id + 1),
-      text, 
+  useEffect(() => {
+    const storedTodos = localStorage.getItem('todos');
+
+    if (storedTodos) {
+      setTodos(JSON.parse(storedTodos));
+    }
+  }, []);
+
+  const addTask = (text, category) => {
+    const newTodo = {
+      id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 1,
+      text,
       category,
-      done : false,
-     }]
-     setTodos(newTodos)
-  }
+      done: false,
+    };
+
+    const newTodos = [...todos, newTodo];
+    setTodos(newTodos);
+    localStorage.setItem('todos', JSON.stringify(newTodos));
+  };
 
   const removeTask = (id) =>{
     const newTodos = [...todos]
     const filteredTodos = newTodos.filter((task) => task.id !== id ? task : null)
     setTodos(filteredTodos)
+    localStorage.setItem('todos', JSON.stringify(filteredTodos));
   }
 
   const completeTask = (id) =>{
